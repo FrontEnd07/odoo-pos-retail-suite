@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_pin_login.DirectPinLogin" t-inherit="point_of_sale.LoginScreen" t-inherit-mode="extension">
+        <xpath expr="//div[@t-if='this.pos.config.module_pos_hr and this.pos.login']/div" position="replace">
+            <div class="pos-direct-pin-card bg-white p-4 rounded-4 shadow-sm">
+                <div class="fs-3 fw-bold text-center mb-3">Введите PIN</div>
+                <div class="pos-direct-pin-input-row mb-3">
+                    <input
+                        t-ref="this.autofocusRef"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]*"
+                        readonly="readonly"
+                        autocomplete="off"
+                        t-att-value="this.state.showPin ? this.state.pin : '•'.repeat(this.state.pin.length)"
+                        class="pos-direct-pin-display form-control form-control-lg text-center"
+                        aria-label="PIN" />
+                    <button
+                        class="pos-direct-pin-visibility btn btn-outline-secondary"
+                        t-on-click="() => this.togglePinVisibility()"
+                        t-att-aria-label="this.state.showPin ? 'Скрыть PIN' : 'Показать PIN'">
+                        <span t-if="this.state.showPin">Скрыть</span>
+                        <span t-else="">Показать</span>
+                    </button>
+                </div>
+                <div class="pos-direct-pin-keypad">
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('1')">1</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('2')">2</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('3')">3</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('4')">4</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('5')">5</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('6')">6</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('7')">7</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('8')">8</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('9')">9</button>
+                    <button class="btn btn-outline-secondary" t-on-click="() => this.removePinDigit()">⌫</button>
+                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('0')">0</button>
+                    <button class="btn btn-primary" t-on-click="() => this.submitPin()">✓</button>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
+
