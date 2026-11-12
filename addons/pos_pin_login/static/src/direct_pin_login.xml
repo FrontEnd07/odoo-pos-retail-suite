@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_pin_login.DirectPinLogin" t-inherit="point_of_sale.LoginScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('login-overlay')]" position="attributes">
+            <attribute name="class" add="retail-pin-overlay" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('screen-login-header')]" position="before">
+            <div class="retail-pin-statusbar">
+                <div class="retail-pin-status">
+                    <span class="retail-pin-status-dot"/>
+                    <span>Касса готова</span>
+                </div>
+                <div class="retail-pin-clock" t-out="this.time.hours"/>
+            </div>
+        </xpath>
         <xpath expr="//div[@t-if='this.pos.config.module_pos_hr and this.pos.login']/div" position="replace">
-            <div class="pos-direct-pin-card bg-white p-4 rounded-4 shadow-sm">
-                <div class="fs-3 fw-bold text-center mb-3">Введите PIN</div>
-                <div class="pos-direct-pin-input-row mb-3">
+            <div class="pos-direct-pin-card">
+                <div class="retail-pin-brand">
+                    <img class="retail-pin-logo" t-att-src="this.logoUrl" alt="Логотип компании"/>
+                    <div class="retail-pin-company" t-out="this.pos.config.name"/>
+                </div>
+                <div class="retail-pin-instruction">Введите PIN сотрудника</div>
+                <div class="pos-direct-pin-input-row">
                     <input
                         t-ref="this.autofocusRef"
                         type="text"
@@ -16,7 +32,7 @@
                         class="pos-direct-pin-display form-control form-control-lg text-center"
                         aria-label="PIN" />
                     <button
-                        class="pos-direct-pin-visibility btn btn-outline-secondary"
+                        class="pos-direct-pin-visibility"
                         t-on-click="() => this.togglePinVisibility()"
                         t-att-aria-label="this.state.showPin ? 'Скрыть PIN' : 'Показать PIN'">
                         <span t-if="this.state.showPin">Скрыть</span>
@@ -24,18 +40,27 @@
                     </button>
                 </div>
                 <div class="pos-direct-pin-keypad">
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('1')">1</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('2')">2</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('3')">3</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('4')">4</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('5')">5</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('6')">6</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('7')">7</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('8')">8</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('9')">9</button>
-                    <button class="btn btn-outline-secondary" t-on-click="() => this.removePinDigit()">⌫</button>
-                    <button class="btn btn-light" t-on-click="() => this.appendPinDigit('0')">0</button>
-                    <button class="btn btn-primary" t-on-click="() => this.submitPin()">✓</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('1')">1</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('2')">2</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('3')">3</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('4')">4</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('5')">5</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('6')">6</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('7')">7</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('8')">8</button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('9')">9</button>
+                    <button class="retail-pin-key retail-pin-key-action retail-pin-key-delete" t-on-click="() => this.removePinDigit()" aria-label="Удалить последнюю цифру">
+                        <svg viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M13 7h13a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H13L4 16l9-9Z"/>
+                            <path d="m17 12 7 8m0-8-7 8"/>
+                        </svg>
+                    </button>
+                    <button class="retail-pin-key" t-on-click="() => this.appendPinDigit('0')">0</button>
+                    <button class="retail-pin-key retail-pin-key-action retail-pin-key-submit" t-on-click="() => this.submitPin()" aria-label="Войти">
+                        <svg viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M6 16h19m-7-7 7 7-7 7"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </xpath>
