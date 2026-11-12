@@ -40,6 +40,54 @@ patch(LoginScreen.prototype, {
         this.updatePinDisplay();
     },
 
+    get retailRegisterNumber() {
+        return this.pos.config.id;
+    },
+
+    get retailNetworkStatus() {
+        const connected = !this.pos.data?.network?.offline;
+        return {
+            connected,
+            label: connected ? "Сервер доступен" : "Нет связи с сервером",
+        };
+    },
+
+    get retailSyncStatus() {
+        const pending = Object.values(this.pos.pendingOrder || {}).reduce(
+            (total, orders) => total + (orders?.size || 0),
+            0
+        );
+        const syncing = this.pos.syncingOrders?.size || 0;
+        const count = pending + syncing;
+        const connected = !this.pos.data?.network?.offline;
+        return {
+            ready: connected && count === 0,
+            count,
+            label: !connected
+                ? "Синхронизация ожидает подключения"
+                : count
+                  ? `Ожидают синхронизации: ${count}`
+                  : "Данные синхронизированы",
+        };
+    },
+
+    get retailPrinterStatus() {
+        const configuredPrinters = [
+            ...(this.pos.config.receipt_printer_ids || []),
+            ...(this.pos.config.preparation_printer_ids || []),
+        ];
+        const connected = configuredPrinters.some((printer) => Boolean(printer?._instance));
+        const configured = configuredPrinters.length > 0;
+        return {
+            connected,
+            label: connected
+                ? "Принтер подключён"
+                : configured
+                  ? "Принтер настроен, но недоступен"
+                  : "Принтер не настроен",
+        };
+    },
+
     async submitPin() {
         if (!this.state.pin) {
             return;

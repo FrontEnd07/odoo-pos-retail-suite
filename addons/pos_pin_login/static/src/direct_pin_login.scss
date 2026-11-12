@@ -53,6 +53,49 @@
     gap: 0.55rem;
 }
 
+.retail-pin-statusbar-right,
+.retail-pin-indicator {
+    display: flex;
+    align-items: center;
+}
+
+.retail-pin-statusbar-right {
+    gap: 0.8rem;
+}
+
+.retail-pin-indicator {
+    min-width: 1.4rem;
+    justify-content: center;
+    gap: 0.2rem;
+    color: rgba(255, 255, 255, 0.58);
+
+    svg {
+        width: 1.35rem;
+        height: 1.35rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    &.is-ready {
+        color: #d9f7df;
+    }
+
+    &.is-warning {
+        color: #ffe08a;
+    }
+
+    &.is-error {
+        color: #ffd0d0;
+    }
+
+    &.is-muted {
+        color: rgba(255, 255, 255, 0.48);
+    }
+}
+
 .retail-pin-status-dot {
     width: 0.65rem;
     height: 0.65rem;
@@ -63,6 +106,21 @@
 
 .retail-pin-clock {
     font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+    .retail-pin-statusbar-right {
+        gap: 0.45rem;
+    }
+
+    .retail-pin-indicator {
+        min-width: 1.2rem;
+
+        svg {
+            width: 1.15rem;
+            height: 1.15rem;
+        }
+    }
 }
 
 .pos-direct-pin-card {

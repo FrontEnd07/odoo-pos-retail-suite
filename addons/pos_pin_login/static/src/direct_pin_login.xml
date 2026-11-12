@@ -10,7 +10,32 @@
                     <span class="retail-pin-status-dot"/>
                     <span>Касса готова</span>
                 </div>
-                <div class="retail-pin-clock" t-out="this.time.hours"/>
+                <div class="retail-pin-statusbar-right">
+                    <div class="retail-pin-indicator is-ready" t-att-title="`Касса №${this.retailRegisterNumber}`" aria-label="Номер кассы">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 5h16v11H4zM8 20h8M12 16v4"/>
+                        </svg>
+                        <span t-out="this.retailRegisterNumber"/>
+                    </div>
+                    <div t-att-class="'retail-pin-indicator ' + (this.retailNetworkStatus.connected ? 'is-ready' : 'is-error')" t-att-title="this.retailNetworkStatus.label" t-att-aria-label="this.retailNetworkStatus.label">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M5 12.5a10 10 0 0 1 14 0M8 16a6 6 0 0 1 8 0M11 19.2a1.5 1.5 0 0 1 2 0"/>
+                        </svg>
+                    </div>
+                    <div t-att-class="'retail-pin-indicator ' + (this.retailSyncStatus.ready ? 'is-ready' : 'is-warning')" t-att-title="this.retailSyncStatus.label" t-att-aria-label="this.retailSyncStatus.label">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 7h-5V2M4 17h5v5M19 12a7 7 0 0 0-12-5l-2 2M5 12a7 7 0 0 0 12 5l2-2"/>
+                        </svg>
+                        <span t-if="this.retailSyncStatus.count" t-out="this.retailSyncStatus.count"/>
+                    </div>
+                    <div t-att-class="'retail-pin-indicator ' + (this.retailPrinterStatus.connected ? 'is-ready' : 'is-muted')" t-att-title="this.retailPrinterStatus.label" t-att-aria-label="this.retailPrinterStatus.label">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 9V3h12v6M6 18H4V10h16v8h-2M7 15h10v6H7z"/>
+                            <path d="M17 12h1"/>
+                        </svg>
+                    </div>
+                    <div class="retail-pin-clock" t-out="this.time.hours"/>
+                </div>
             </div>
         </xpath>
         <xpath expr="//div[@t-if='this.pos.config.module_pos_hr and this.pos.login']/div" position="replace">

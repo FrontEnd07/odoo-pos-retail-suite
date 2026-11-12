@@ -1,6 +1,6 @@
 {
     "name": "POS Direct PIN Login",
-    "version": "20.0.1.1.3",
+    "version": "20.0.1.2.0",
     "category": "Sales/Point of Sale",
     "summary": "Direct touch-friendly PIN login for POS employees",
     "author": "FrontEnd07",
