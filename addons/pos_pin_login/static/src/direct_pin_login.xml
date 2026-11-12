@@ -6,9 +6,9 @@
         </xpath>
         <xpath expr="//div[hasclass('screen-login-header')]" position="before">
             <div class="retail-pin-statusbar">
-                <div class="retail-pin-status">
+                <div t-att-class="'retail-pin-status is-' + this.retailCashStatus.level">
                     <span class="retail-pin-status-dot"/>
-                    <span>Касса готова</span>
+                    <span t-out="this.retailCashStatus.label"/>
                 </div>
                 <div class="retail-pin-statusbar-right">
                     <div class="retail-pin-indicator is-ready" t-att-title="`Касса №${this.retailRegisterNumber}`" aria-label="Номер кассы">

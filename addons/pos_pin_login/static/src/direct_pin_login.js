@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { onMounted } from "@odoo/owl";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 
@@ -8,12 +8,36 @@ patch(LoginScreen.prototype, {
     setup() {
         super.setup(...arguments);
         this.state.showPin = false;
+        this.state.serverOnline = true;
+        this.retailServerCheckTimer = null;
         onMounted(() => {
             if (this.pos.config.module_pos_hr) {
                 this.pos.resetCashier();
                 this.pos.login = true;
             }
+            this.checkRetailServerStatus();
+            this.retailServerCheckTimer = setInterval(
+                () => this.checkRetailServerStatus(),
+                5000
+            );
         });
+        onWillUnmount(() => clearInterval(this.retailServerCheckTimer));
+    },
+
+    async checkRetailServerStatus() {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 2500);
+        try {
+            const response = await fetch(`/web/static/img/favicon.ico?pos_check=${Date.now()}`, {
+                cache: "no-store",
+                signal: controller.signal,
+            });
+            this.state.serverOnline = response.ok;
+        } catch {
+            this.state.serverOnline = false;
+        } finally {
+            clearTimeout(timeout);
+        }
     },
 
     appendPinDigit(digit) {
@@ -45,7 +69,8 @@ patch(LoginScreen.prototype, {
     },
 
     get retailNetworkStatus() {
-        const connected = !this.pos.data?.network?.offline;
+        const connected =
+            this.state.serverOnline && navigator.onLine && !this.pos.data?.network?.offline;
         return {
             connected,
             label: connected ? "Сервер доступен" : "Нет связи с сервером",
@@ -59,7 +84,7 @@ patch(LoginScreen.prototype, {
         );
         const syncing = this.pos.syncingOrders?.size || 0;
         const count = pending + syncing;
-        const connected = !this.pos.data?.network?.offline;
+        const connected = this.retailNetworkStatus.connected;
         return {
             ready: connected && count === 0,
             count,
@@ -79,6 +104,7 @@ patch(LoginScreen.prototype, {
         const connected = configuredPrinters.some((printer) => Boolean(printer?._instance));
         const configured = configuredPrinters.length > 0;
         return {
+            configured,
             connected,
             label: connected
                 ? "Принтер подключён"
@@ -86,6 +112,19 @@ patch(LoginScreen.prototype, {
                   ? "Принтер настроен, но недоступен"
                   : "Принтер не настроен",
         };
+    },
+
+    get retailCashStatus() {
+        if (!this.retailNetworkStatus.connected) {
+            return { level: "error", label: "Нет связи с сервером" };
+        }
+        if (!this.retailSyncStatus.ready) {
+            return { level: "warning", label: "Ожидается синхронизация" };
+        }
+        if (this.retailPrinterStatus.configured && !this.retailPrinterStatus.connected) {
+            return { level: "warning", label: "Проверьте принтер" };
+        }
+        return { level: "ready", label: "Касса готова" };
     },
 
     async submitPin() {

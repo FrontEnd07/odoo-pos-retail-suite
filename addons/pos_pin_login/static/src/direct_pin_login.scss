@@ -51,6 +51,15 @@
     display: flex;
     align-items: center;
     gap: 0.55rem;
+
+    &.is-warning .retail-pin-status-dot {
+        background: #ffe08a;
+    }
+
+    &.is-error .retail-pin-status-dot {
+        background: #ffb5b5;
+        box-shadow: 0 0 0 0.2rem rgba(255, 181, 181, 0.18);
+    }
 }
 
 .retail-pin-statusbar-right,
