@@ -155,7 +155,7 @@
 .retail-pin-key {
     min-height: 4rem;
     border: 0;
-    border-radius: 50%;
+    border-radius: 0;
     background: transparent;
     color: var(--retail-ink);
     font-size: 2rem;
@@ -180,6 +180,7 @@
     aspect-ratio: 1;
     align-self: center;
     justify-self: center;
+    border-radius: 50%;
     display: grid;
     place-items: center;
 
