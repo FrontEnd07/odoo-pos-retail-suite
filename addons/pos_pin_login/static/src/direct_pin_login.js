@@ -3,6 +3,36 @@
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
+import { PosStore } from "@point_of_sale/app/services/pos_store";
+
+// A browser session authenticated as an Odoo administrator must never make
+// that administrator the active cashier.  Odoo's pos_hr restores the last
+// connected employee from IndexedDB during startup, which can otherwise skip
+// the PIN screen after a restart.  Treat every POS startup as a locked
+// register and require an employee PIN before sales are available.
+patch(PosStore.prototype, {
+    async setup() {
+        await super.setup(...arguments);
+        if (this.config.module_pos_hr) {
+            this.resetCashier();
+            this.accessRight.hasLoggedIn.set(false);
+            this.login = true;
+            // Router startup can restore the URL that was open before a
+            // browser restart.  Navigate after that startup turn so the lock
+            // screen always wins over a stale /product URL.
+            setTimeout(() => this.navigate("LoginScreen"), 0);
+        }
+    },
+
+    checkPreviousLoggedCashier() {
+        if (!this.config.module_pos_hr) {
+            return super.checkPreviousLoggedCashier(...arguments);
+        }
+        this.resetCashier();
+        this.accessRight.hasLoggedIn.set(false);
+        this.login = true;
+    },
+});
 
 patch(LoginScreen.prototype, {
     setup() {
