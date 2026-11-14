@@ -201,13 +201,37 @@
 }
 
 .pos-direct-pin-visibility {
-    min-height: 2.5rem;
-    padding: 0 0.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
     border: 0;
+    border-radius: 0;
     background: transparent;
     color: var(--retail-orange-dark);
-    font-size: 0.88rem;
-    font-weight: 650;
+    display: grid;
+    place-items: center;
+    transition: background 100ms ease, color 100ms ease;
+
+    &:hover,
+    &:focus-visible {
+        outline: 0;
+        background: #eef1f3;
+        color: var(--retail-orange);
+    }
+
+    &:active {
+        background: #e2e7ea;
+    }
+}
+
+.pos-direct-pin-eye {
+    width: 1.55rem;
+    height: 1.55rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .pos-direct-pin-keypad {
