@@ -1,7 +1,161 @@
-// Shared design tokens. Screen-specific changes will be added only after the
-// corresponding cashier workflow has been approved and tested.
+// Shared retail design tokens and simple-keyboard theme overrides.
 .pos {
     --retail-touch-target: 3.5rem;
     --retail-border-radius: 0.5rem;
 }
 
+.retail-search-keyboard-body {
+    padding: 1rem 1.25rem 1.25rem;
+    overflow: hidden;
+}
+
+.retail-search-keyboard-display {
+    min-height: 4.25rem;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border: 2px solid #d8dee4;
+    background: #fff;
+    color: #20252b;
+
+    > svg {
+        width: 1.6rem;
+        height: 1.6rem;
+        flex: 0 0 auto;
+        fill: none;
+        stroke: #68717c;
+        stroke-width: 2;
+        stroke-linecap: round;
+    }
+}
+
+.retail-search-keyboard-value {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    font-size: clamp(1.1rem, 2vw, 1.45rem);
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.is-placeholder {
+        color: #8a939d;
+        font-weight: 400;
+    }
+}
+
+.retail-search-keyboard-clear {
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: #69737d;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+    }
+}
+
+.retail-simple-keyboard.hg-theme-default {
+    width: 100%;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: clamp(0.35rem, 1vw, 0.65rem);
+    border-radius: 0.4rem;
+    background: #e8ecef;
+    box-sizing: border-box;
+
+    .hg-row {
+        gap: clamp(0.2rem, 0.55vw, 0.5rem);
+        margin-bottom: clamp(0.2rem, 0.55vw, 0.5rem);
+    }
+
+    .hg-button {
+        min-width: 0;
+        height: clamp(2.7rem, 6vh, 4rem);
+        border: 1px solid #d1d8de;
+        border-radius: 0.3rem;
+        background: #fff;
+        color: #20252b;
+        font-family: inherit;
+        font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+        font-weight: 600;
+        box-shadow: 0 0.12rem 0.25rem rgba(32, 37, 43, 0.08);
+
+        &:hover,
+        &:focus-visible {
+            outline: 0;
+            border-color: #f36b21;
+            background: #fff3ec;
+        }
+
+        &:active,
+        &.hg-activeButton {
+            background: #ffe4d5;
+        }
+    }
+
+    .retail-hg-language {
+        max-width: 5rem;
+        color: #d9520f;
+    }
+
+    .retail-hg-space {
+        flex: 5;
+    }
+
+    .retail-hg-clear {
+        flex: 1.5;
+        color: #68717c;
+    }
+
+    .retail-hg-done {
+        flex: 1.5;
+        border-color: #6f5a98;
+        background: #6f5a98;
+        color: #fff;
+
+        &:hover,
+        &:focus-visible,
+        &:active {
+            background: #59457f;
+        }
+    }
+
+    .retail-hg-backspace {
+        max-width: 5rem;
+    }
+}
+
+@media (max-width: 720px), (max-height: 680px) {
+    .retail-search-keyboard-body {
+        padding: 0.55rem 0.65rem 0.7rem;
+    }
+
+    .retail-search-keyboard-display {
+        min-height: 3.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .retail-simple-keyboard.hg-theme-default {
+        .hg-button {
+            height: 2.65rem;
+            font-size: 0.9rem;
+        }
+
+        .hg-row {
+            gap: 0.18rem;
+            margin-bottom: 0.18rem;
+        }
+    }
+}

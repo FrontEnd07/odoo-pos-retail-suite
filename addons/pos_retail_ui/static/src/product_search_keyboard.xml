@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_retail_ui.ProductSearchKeyboard">
+        <Dialog title.translate="Поиск товара" size="'xl'" bodyClass="'retail-search-keyboard-body'">
+            <div class="retail-search-keyboard-display">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="10.5" cy="10.5" r="6.5"/>
+                    <path d="m15.5 15.5 5 5"/>
+                </svg>
+                <div class="retail-search-keyboard-value" t-att-class="{'is-placeholder': !this.state.value}">
+                    <t t-out="this.state.value || 'Введите название, код или штрихкод'"/>
+                </div>
+                <button t-if="this.state.value" class="retail-search-keyboard-clear" t-on-click="this.clear" aria-label="Очистить поиск" title="Очистить">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                </button>
+            </div>
+            <div class="retail-simple-keyboard"/>
+        </Dialog>
+    </t>
+
+    <t t-name="pos_retail_ui.NavbarSearchKeyboard" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//Input[@t-if='this.pos.showSearchButton()']" position="attributes">
+            <attribute name="onClick">() => this.openProductSearchKeyboard()</attribute>
+        </xpath>
+    </t>
+</templates>

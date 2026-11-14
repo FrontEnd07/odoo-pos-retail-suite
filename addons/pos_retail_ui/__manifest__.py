@@ -7,6 +7,10 @@
     "depends": ["point_of_sale"],
     "assets": {
         "point_of_sale._assets_pos": [
+            "pos_retail_ui/static/lib/simple-keyboard/simple-keyboard.js",
+            "pos_retail_ui/static/lib/simple-keyboard/simple-keyboard.css",
+            "pos_retail_ui/static/src/product_search_keyboard.js",
+            "pos_retail_ui/static/src/product_search_keyboard.xml",
             "pos_retail_ui/static/src/retail_ui.scss",
         ],
     },
