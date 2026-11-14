@@ -4,6 +4,17 @@ import { onMounted, onWillUnmount } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
+import { BarcodeReader } from "@point_of_sale/app/services/barcode_reader_service";
+
+patch(BarcodeReader.prototype, {
+    scan(code) {
+        if (code) {
+            this.retailLastScanAt = Date.now();
+            window.dispatchEvent(new CustomEvent("retail-barcode-scanned"));
+        }
+        return super.scan(...arguments);
+    },
+});
 
 // A browser session authenticated as an Odoo administrator must never make
 // that administrator the active cashier.  Odoo's pos_hr restores the last
@@ -39,7 +50,11 @@ patch(LoginScreen.prototype, {
         super.setup(...arguments);
         this.state.showPin = false;
         this.state.serverOnline = true;
+        this.state.scannerSeen = false;
         this.retailServerCheckTimer = null;
+        this.retailScannerActivityHandler = () => {
+            this.state.scannerSeen = true;
+        };
         onMounted(() => {
             if (this.pos.config.module_pos_hr) {
                 this.pos.resetCashier();
@@ -50,8 +65,18 @@ patch(LoginScreen.prototype, {
                 () => this.checkRetailServerStatus(),
                 5000
             );
+            window.addEventListener(
+                "retail-barcode-scanned",
+                this.retailScannerActivityHandler
+            );
         });
-        onWillUnmount(() => clearInterval(this.retailServerCheckTimer));
+        onWillUnmount(() => {
+            clearInterval(this.retailServerCheckTimer);
+            window.removeEventListener(
+                "retail-barcode-scanned",
+                this.retailScannerActivityHandler
+            );
+        });
     },
 
     async checkRetailServerStatus() {
@@ -145,13 +170,13 @@ patch(LoginScreen.prototype, {
     },
 
     get retailScannerStatus() {
-        // USB barcode scanners normally work as a keyboard and browsers do
-        // not expose their physical connection state.  The reliable signal
-        // available in POS is whether Odoo's barcode reader service is ready.
-        const ready = Boolean(this.pos.barcodeReader);
+        // Keyboard-wedge USB scanners expose no physical connection state to
+        // the browser.  Only report success after a real barcode event has
+        // reached Odoo in the current login-screen session.
+        const ready = this.state.scannerSeen;
         return {
             ready,
-            label: ready ? "Сканер готов" : "Сканер недоступен",
+            label: ready ? "Сканер отвечает" : "Сканер не проверен",
         };
     },
 
