@@ -28,7 +28,7 @@
                         </svg>
                         <span t-if="this.retailSyncStatus.count" t-out="this.retailSyncStatus.count"/>
                     </div>
-                    <div t-att-class="'retail-pin-indicator ' + (this.retailScannerStatus.ready ? 'is-ready' : 'is-muted')" t-att-title="this.retailScannerStatus.label" t-att-aria-label="this.retailScannerStatus.label">
+                    <div t-att-class="'retail-pin-indicator ' + this.retailScannerStatus.level" t-att-title="this.retailScannerStatus.label" t-att-aria-label="this.retailScannerStatus.label">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M4 5h3M4 5v3M20 5h-3M20 5v3M4 19h3M4 19v-3M20 19h-3M20 19v-3"/>
                             <path d="M7 10v4M10 9v6M13 10v4M16 9v6"/>

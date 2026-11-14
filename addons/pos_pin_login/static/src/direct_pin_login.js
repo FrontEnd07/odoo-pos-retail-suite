@@ -51,6 +51,8 @@ patch(LoginScreen.prototype, {
         this.state.showPin = false;
         this.state.serverOnline = true;
         this.state.scannerSeen = false;
+        this.state.scannerConnected = null;
+        this.state.scannerName = "";
         this.retailServerCheckTimer = null;
         this.retailScannerActivityHandler = () => {
             this.state.scannerSeen = true;
@@ -61,8 +63,12 @@ patch(LoginScreen.prototype, {
                 this.pos.login = true;
             }
             this.checkRetailServerStatus();
+            this.checkRetailHardwareStatus();
             this.retailServerCheckTimer = setInterval(
-                () => this.checkRetailServerStatus(),
+                () => {
+                    this.checkRetailServerStatus();
+                    this.checkRetailHardwareStatus();
+                },
                 5000
             );
             window.addEventListener(
@@ -90,6 +96,31 @@ patch(LoginScreen.prototype, {
             this.state.serverOnline = response.ok;
         } catch {
             this.state.serverOnline = false;
+        } finally {
+            clearTimeout(timeout);
+        }
+    },
+
+    async checkRetailHardwareStatus() {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 1500);
+        try {
+            const response = await fetch("/v1/hardware", {
+                cache: "no-store",
+                signal: controller.signal,
+            });
+            if (!response.ok) {
+                return;
+            }
+            const payload = await response.json();
+            const scanner = payload?.scanner;
+            if (typeof scanner?.connected === "boolean") {
+                this.state.scannerConnected = scanner.connected;
+                this.state.scannerName = scanner.devices?.[0]?.name || "";
+            }
+        } catch {
+            // The POS may be opened directly from Odoo during development.
+            // In that case retain the scan-activity fallback below.
         } finally {
             clearTimeout(timeout);
         }
@@ -173,10 +204,16 @@ patch(LoginScreen.prototype, {
         // Keyboard-wedge USB scanners expose no physical connection state to
         // the browser.  Only report success after a real barcode event has
         // reached Odoo in the current login-screen session.
-        const ready = this.state.scannerSeen;
+        const ready = this.state.scannerConnected === true || this.state.scannerSeen;
+        const disconnected = this.state.scannerConnected === false && !this.state.scannerSeen;
         return {
             ready,
-            label: ready ? "Сканер отвечает" : "Сканер не проверен",
+            level: ready ? "is-ready" : disconnected ? "is-error" : "is-muted",
+            label: ready
+                ? this.state.scannerName || "Сканер подключён"
+                : disconnected
+                  ? "Сканер не подключён"
+                  : "Сканер не проверен",
         };
     },
 
