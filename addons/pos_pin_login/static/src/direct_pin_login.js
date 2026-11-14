@@ -144,6 +144,17 @@ patch(LoginScreen.prototype, {
         };
     },
 
+    get retailScannerStatus() {
+        // USB barcode scanners normally work as a keyboard and browsers do
+        // not expose their physical connection state.  The reliable signal
+        // available in POS is whether Odoo's barcode reader service is ready.
+        const ready = Boolean(this.pos.barcodeReader);
+        return {
+            ready,
+            label: ready ? "Сканер готов" : "Сканер недоступен",
+        };
+    },
+
     get retailCashStatus() {
         if (!this.retailNetworkStatus.connected) {
             return { level: "error", label: "Нет связи с сервером" };

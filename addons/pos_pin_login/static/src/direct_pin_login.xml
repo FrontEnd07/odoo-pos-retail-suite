@@ -28,6 +28,12 @@
                         </svg>
                         <span t-if="this.retailSyncStatus.count" t-out="this.retailSyncStatus.count"/>
                     </div>
+                    <div t-att-class="'retail-pin-indicator ' + (this.retailScannerStatus.ready ? 'is-ready' : 'is-muted')" t-att-title="this.retailScannerStatus.label" t-att-aria-label="this.retailScannerStatus.label">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 5h3M4 5v3M20 5h-3M20 5v3M4 19h3M4 19v-3M20 19h-3M20 19v-3"/>
+                            <path d="M7 10v4M10 9v6M13 10v4M16 9v6"/>
+                        </svg>
+                    </div>
                     <div t-att-class="'retail-pin-indicator ' + (this.retailPrinterStatus.connected ? 'is-ready' : 'is-muted')" t-att-title="this.retailPrinterStatus.label" t-att-aria-label="this.retailPrinterStatus.label">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6 9V3h12v6M6 18H4V10h16v8h-2M7 15h10v6H7z"/>

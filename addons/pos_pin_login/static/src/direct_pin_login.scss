@@ -70,9 +70,11 @@
 
 .retail-pin-statusbar-right {
     gap: 0.8rem;
+    flex: 0 0 auto;
 }
 
 .retail-pin-indicator {
+    flex: 0 0 auto;
     min-width: 1.4rem;
     justify-content: center;
     gap: 0.2rem;
@@ -114,7 +116,11 @@
 }
 
 .retail-pin-clock {
+    width: 5rem;
+    flex: 0 0 5rem;
+    text-align: right;
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
 }
 
 @media (max-width: 600px) {
