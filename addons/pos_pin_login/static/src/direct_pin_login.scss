@@ -6,7 +6,13 @@
 
     padding: 0 !important;
     overflow: hidden;
-    background: #e8edf1 !important;
+    background-color: #f7f4ef !important;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18)),
+        url("/pos_pin_login/static/src/img/pin_background.jpg") !important;
+    background-position: center !important;
+    background-size: 32rem auto !important;
+    background-repeat: repeat !important;
     color: var(--retail-ink);
 
     &::before {
@@ -14,9 +20,12 @@
         inset: 2.75rem 0 0;
         content: "";
         pointer-events: none;
-        background:
-            radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.88) 0 12rem, transparent 31rem),
-            linear-gradient(135deg, rgba(255, 255, 255, 0.45), transparent 45%);
+        background: radial-gradient(
+            circle at 50% 42%,
+            rgba(255, 255, 255, 0.52) 0 10rem,
+            rgba(255, 255, 255, 0.12) 27rem,
+            transparent 38rem
+        );
     }
 
     .screen-login-header,
